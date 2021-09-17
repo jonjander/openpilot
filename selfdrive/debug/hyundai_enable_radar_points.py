@@ -33,6 +33,11 @@ SUPPORTED_FW_VERSIONS = {
     "default_config": b"\x00\x00\x00\x01\x00\x00",
     "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
   },
+  # 2021 Kia Niro Ev
+  b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ": {
+    "default_config": b"\x00\x00\x00\x01\x00\x00",
+    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+  },
 }
 
 if __name__ == "__main__":
