@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from common.realtime import sec_since_boot
+from common.numpy_fast import clip
 from selfdrive.swaglog import cloudlog
 from selfdrive.modeld.constants import T_IDXS
 from selfdrive.controls.lib.drive_helpers import MPC_COST_LONG, CONTROL_N
@@ -185,7 +186,7 @@ class LeadMpc():
       t += dt
 
   def init_with_sim(self, v_ego, lead_xv, a_lead_0):
-    a_ego = min(0.0, -(v_ego - lead_xv[0,1]) * (v_ego - lead_xv[0,1]) / (2.0 * lead_xv[0,0] + 0.01) + a_lead_0)
+    a_ego = min(0.0, -2 * (v_ego - lead_xv[0,1]) * (v_ego - lead_xv[0,1]) / (2.0 * lead_xv[0,0] + 0.01) + a_lead_0)
     dt =.2
     t = .0
     x_ego = 0.0
@@ -211,7 +212,7 @@ class LeadMpc():
     if lead is not None and lead.status:
       x_lead = lead.dRel
       v_lead = max(0.0, lead.vLead)
-      a_lead = lead.aLeadK
+      a_lead = clip(lead.aLeadK, -5.0, 5.0)
 
       # MPC will not converge if immidiate crash is expected
       # Clip lead distance to what is still possible to brake for
