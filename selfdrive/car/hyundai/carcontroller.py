@@ -36,23 +36,23 @@ def process_hud_alert(enabled, fingerprint, visual_alert, left_lane,
 
   return sys_warning, sys_state, left_lane_warning, right_lane_warning
 
-SUPPORTED_FW_VERSIONS = {
-  # 2020 SONATA
-  b"DN8_ SCC FHCUP      1.00 1.00 99110-L0000\x19\x08)\x15T    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  },
-  # 2020 PALISADE
-  b"LX2_ SCC FHCUP      1.00 1.04 99110-S8100\x19\x05\x02\x16V    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  },
-  # 2021 Kia Niro Ev
-  b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  },
-}
+# SUPPORTED_FW_VERSIONS = {
+#   # 2020 SONATA
+#   b"DN8_ SCC FHCUP      1.00 1.00 99110-L0000\x19\x08)\x15T    ": {
+#     "default_config": b"\x00\x00\x00\x01\x00\x00",
+#     "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+#   },
+#   # 2020 PALISADE
+#   b"LX2_ SCC FHCUP      1.00 1.04 99110-S8100\x19\x05\x02\x16V    ": {
+#     "default_config": b"\x00\x00\x00\x01\x00\x00",
+#     "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+#   },
+#   # 2021 Kia Niro Ev
+#   b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ": {
+#     "default_config": b"\x00\x00\x00\x01\x00\x00",
+#     "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+#   },
+# }
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
@@ -64,19 +64,19 @@ class CarController():
     self.steer_rate_limited = False
     self.last_resume_frame = 0
 
-    if self.car_fingerprint in [CAR.KIA_NIRO_EV]:
-      panda = Panda() # type: ignore
-      panda.set_safety_mode(Panda.SAFETY_ELM327)
-      uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
-      session_type : SESSION_TYPE = 0x07
-      uds_client.diagnostic_session_control(session_type)
-      fw_version_data_id : DATA_IDENTIFIER_TYPE = 0xf100 # type: ignore
-      fw_version = uds_client.read_data_by_identifier(fw_version_data_id)
-      config_data_id : DATA_IDENTIFIER_TYPE = 0x0142 # type: ignore
-      current_config = uds_client.read_data_by_identifier(config_data_id)
-      new_config = SUPPORTED_FW_VERSIONS[fw_version]["tracks_enabled"]
-      if current_config != new_config:
-        uds_client.write_data_by_identifier(config_data_id, new_config)
+    # if self.car_fingerprint in [CAR.KIA_NIRO_EV]:
+    #   panda = Panda() # type: ignore
+    #   panda.set_safety_mode(Panda.SAFETY_ELM327)
+    #   uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
+    #   session_type : SESSION_TYPE = 0x07
+    #   uds_client.diagnostic_session_control(session_type)
+    #   fw_version_data_id : DATA_IDENTIFIER_TYPE = 0xf100 # type: ignore
+    #   fw_version = uds_client.read_data_by_identifier(fw_version_data_id)
+    #   config_data_id : DATA_IDENTIFIER_TYPE = 0x0142 # type: ignore
+    #   current_config = uds_client.read_data_by_identifier(config_data_id)
+    #   new_config = SUPPORTED_FW_VERSIONS[fw_version]["tracks_enabled"]
+    #   if current_config != new_config:
+    #     uds_client.write_data_by_identifier(config_data_id, new_config)
         
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert, hud_speed,
