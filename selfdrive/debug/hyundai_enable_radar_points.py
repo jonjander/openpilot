@@ -38,6 +38,11 @@ SUPPORTED_FW_VERSIONS = {
     "default_config": b"\x00\x00\x00\x01\x00\x00",
     "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
   },
+  # 2021 Kia Niro Ev
+  b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ": {
+    "default_config": b"\x00\x00\x00\x01\x00\x00",
+    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+  },
 }
 
 if __name__ == "__main__":
@@ -55,10 +60,10 @@ if __name__ == "__main__":
     if e.returncode != 1: # 1 == no process found (boardd not running)
       raise e
 
-  confirm = input("power on the vehicle keeping the engine off (press start button twice) then type OK to continue: ").upper().strip()
-  if confirm != "OK":
-    print("\nyou didn't type 'OK! (aborted)")
-    sys.exit(0)
+  # confirm = input("power on the vehicle keeping the engine off (press start button twice) then type OK to continue: ").upper().strip()
+  # if confirm != "OK":
+  #   print("\nyou didn't type 'OK! (aborted)")
+  #   sys.exit(0)
 
   panda = Panda() # type: ignore
   panda.set_safety_mode(Panda.SAFETY_ELM327)
