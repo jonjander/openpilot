@@ -29,7 +29,7 @@ from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
 
-from selfdrive.debug.write_data_by_id import write_data_by_id
+# from selfdrive.debug.write_data_by_id import write_data_by_id
 
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
