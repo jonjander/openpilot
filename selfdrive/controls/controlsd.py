@@ -119,25 +119,13 @@ class Controls:
     params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
 
-    if self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in [HYUNDAI_CAR.SONATA, HYUNDAI_CAR.PALISADE, HYUNDAI_CAR.KIA_NIRO_EV]:
+    if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
       rdr_fw = None
       for fw in self.CP.carFw:
         if fw.ecu == "fwdRadar":
           rdr_fw = fw
           break
-      cloudlog.info("enabling radar tracks for %s" % hex(rdr_fw.address))
-      # if rdr_fw.fwVersion == b"\xf1\x00LX2_ SCC FHCUP      1.00 1.04 99110-S8100         ":
-      #   # DANGER: writing to the wrong data id could really mess things up and be difficult to reverse
-      #   cloudlog.info("enabling radar tracks %s" % hex(rdr_fw.address))
-      #   write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x01\x00\x01\x00\x00\x00", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
-      # if rdr_fw.fwVersion == b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ":
-      #   # DANGER: writing to the wrong data id could really mess things up and be difficult to reverse
-      cloudlog.info("enabling radar tracks %s" % hex(rdr_fw.address))
       write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=2, retry=20)
-      # if rdr_fw.fwVersion == b"\xf1\x8799110Q4500\xf1\000DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00":
-      #   # DANGER: writing to the wrong data id could really mess things up and be difficult to reverse
-      #   cloudlog.info("enabling radar tracks %s" % hex(rdr_fw.address))
-      #   write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
 
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()

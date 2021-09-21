@@ -24,8 +24,8 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "hyundai"
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
     ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1]
-
-    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.KIA_NIRO_EV]
+    # CAR.KIA_NIRO_EV
+    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE]
     ret.safetyParam = 0
 
     # Most Hyundai car ports are community features for now
