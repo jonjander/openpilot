@@ -740,9 +740,9 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
   EventName.accFaulted: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Cruise Faulted"),
-    ET.PERMANENT: NormalPermanentAlert("Cruise Faulted", ""),
-    ET.NO_ENTRY: NoEntryAlert("Cruise Faulted"),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Cruise Faulted: Acc"),
+    ET.PERMANENT: NormalPermanentAlert("Cruise Faulted: Acc", ""),
+    ET.NO_ENTRY: NoEntryAlert("Cruise Faulted: Acc"),
   },
 
   EventName.controlsMismatch: {
@@ -797,13 +797,13 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
   EventName.brakeUnavailable: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Cruise Fault: Restart the Car"),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Cruise Fault: Brake Unavailable"),
     ET.PERMANENT: Alert(
-      "Cruise Fault: Restart the car to engage",
+      "Cruise Fault: Brake Unavailable",
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., .2),
-    ET.NO_ENTRY: NoEntryAlert("Cruise Fault: Restart the Car"),
+    ET.NO_ENTRY: NoEntryAlert("Cruise Fault: Brake Unavailable"),
   },
 
   EventName.reverseGear: {
@@ -873,11 +873,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
 
   EventName.lowSpeedLockout: {
     ET.PERMANENT: Alert(
-      "Cruise Fault: Restart the car to engage",
+      "Cruise Fault: LowSpeedLockout",
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., .2),
-    ET.NO_ENTRY: NoEntryAlert("Cruise Fault: Restart the Car"),
+    ET.NO_ENTRY: NoEntryAlert("Cruise Fault: LowSpeedLockout"),
   },
 
 }
