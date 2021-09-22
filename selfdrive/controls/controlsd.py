@@ -9,6 +9,7 @@ from common.realtime import sec_since_boot, config_realtime_process, Priority, R
 from common.profiler import Profiler
 from common.params import Params, put_nonblocking
 import cereal.messaging as messaging
+from selfdrive.car.hyundai.values import CAR as HYUNDAI_CAR
 from selfdrive.config import Conversions as CV
 from selfdrive.swaglog import cloudlog
 from selfdrive.boardd.boardd import can_list_to_can_capnp
@@ -27,6 +28,8 @@ from selfdrive.controls.lib.vehicle_model import VehicleModel
 from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
+
+from selfdrive.debug.write_data_by_id import write_data_by_id
 
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
@@ -115,6 +118,14 @@ class Controls:
     cp_bytes = self.CP.to_bytes()
     params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
+
+    if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
+      rdr_fw = None
+      for fw in self.CP.carFw:
+        if fw.ecu == "fwdRadar":
+          rdr_fw = fw
+          break
+      write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=2, retry=20)
 
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
