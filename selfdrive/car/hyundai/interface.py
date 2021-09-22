@@ -8,6 +8,7 @@ from selfdrive.car.hyundai.radar_interface import RADAR_START_ADDR
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
+from selfdrive.debug.write_data_by_id import write_data_by_id
 
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
@@ -271,6 +272,7 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def init(CP, logcan, sendcan):
+    write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", logcan, sendcan, 0, timeout=1, retry=10)
     if CP.openpilotLongitudinalControl:
       disable_ecu(logcan, sendcan, addr=0x7d0, com_cont_req=b'\x28\x83\x01')
       
