@@ -119,9 +119,12 @@ class Controls:
     params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
 
+    try:
+      write_data_by_id(b"\x07\xd0", b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=7, retry=20)
+    except:
+      print("An exception occurred")
 
-    write_data_by_id(b"\x07\xD0", b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=2, retry=20)
-
+    
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
     self.events = Events()
