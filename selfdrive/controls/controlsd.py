@@ -120,7 +120,7 @@ class Controls:
     put_nonblocking("CarParamsCache", cp_bytes)
 
     try:
-      write_data_by_id(b"\x07\xd0", b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=7, retry=20)
+      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
     except:
       print("An exception occurred")
 
