@@ -123,6 +123,16 @@ class Controls:
       write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
     except:
       print("An exception occurred")
+    
+    try:
+      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
+    except:
+      print("An exception occurred")
+
+    try:
+      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
+    except:
+      print("An exception occurred")
 
     
     self.CC = car.CarControl.new_message()

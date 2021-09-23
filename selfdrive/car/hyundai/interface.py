@@ -272,7 +272,21 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def init(CP, logcan, sendcan):
-    write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", logcan, sendcan, 0, timeout=1, retry=10)
+    try:
+      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", logcan, sendcan, 0, timeout=1, retry=10)
+    except:
+      print("An exception occurred")
+
+    try:
+      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", logcan, sendcan, 0, timeout=1, retry=10)
+    except:
+      print("An exception occurred")
+
+    try:
+      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", logcan, sendcan, 0, timeout=1, retry=10)
+    except:
+      print("An exception occurred")
+
     if CP.openpilotLongitudinalControl:
       disable_ecu(logcan, sendcan, addr=0x7d0, com_cont_req=b'\x28\x83\x01')
       
