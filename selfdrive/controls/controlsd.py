@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from logging import fatal
 import os
 import math
 from numbers import Number
@@ -29,7 +30,32 @@ from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
 
-from selfdrive.debug.write_data_by_id import write_data_by_id
+from panda.python import Panda
+from panda.python.uds import UdsClient, SESSION_TYPE, DATA_IDENTIFIER_TYPE
+
+
+SUPPORTED_FW_VERSIONS = {
+  # 2020 SONATA
+  b"DN8_ SCC FHCUP      1.00 1.00 99110-L0000\x19\x08)\x15T    ": {
+    "default_config": b"\x00\x00\x00\x01\x00\x00",
+    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+  },
+  # 2021 SONATA HYBRID
+  b"DNhe SCC FHCUP      1.00 1.02 99110-L5000 \x01#\x15#    ": {
+    "default_config": b"\x00\x00\x00\x01\x00\x00",
+    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+  }, 
+  # 2020 PALISADE
+  b"LX2_ SCC FHCUP      1.00 1.04 99110-S8100\x19\x05\x02\x16V    ": {
+    "default_config": b"\x00\x00\x00\x01\x00\x00",
+    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+  },
+  # 2021 Kia Niro Ev
+  b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ": {
+    "default_config": b"\x00\x00\x00\x01\x00\x00",
+    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
+  },
+}
 
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
@@ -120,19 +146,69 @@ class Controls:
     put_nonblocking("CarParamsCache", cp_bytes)
 
     try:
-      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
+      panda = Panda()
+      panda.can_recv = self.can_sock
+      panda.can_send = self.pm.sock['sendcan']
+      panda.set_safety_mode(Panda.SAFETY_ELM327)
+      uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
+      session_type : SESSION_TYPE = 0x07 
+      uds_client.diagnostic_session_control(session_type)
+      fw_version_data_id : DATA_IDENTIFIER_TYPE = 0xf100
+      fw_version = uds_client.read_data_by_identifier(fw_version_data_id)
+      config_data_id : DATA_IDENTIFIER_TYPE = 0x0142
+      new_config = SUPPORTED_FW_VERSIONS[fw_version]["tracks_enabled"]
+      uds_client.write_data_by_identifier(config_data_id, new_config)
     except:
       print("An exception occurred")
     
     try:
-      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
+      panda = Panda()
+      panda.can_recv = self.can_sock
+      panda.can_send = self.pm.sock['sendcan']
+      panda.set_safety_mode(Panda.SAFETY_ELM327)
+      uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
+      session_type : SESSION_TYPE = 0x07 
+      uds_client.diagnostic_session_control(session_type)
+      fw_version_data_id : DATA_IDENTIFIER_TYPE = 0xf100
+      fw_version = uds_client.read_data_by_identifier(fw_version_data_id)
+      config_data_id : DATA_IDENTIFIER_TYPE = 0x0142
+      new_config = SUPPORTED_FW_VERSIONS[fw_version]["tracks_enabled"]
+      uds_client.write_data_by_identifier(config_data_id, new_config)
     except:
       print("An exception occurred")
 
     try:
-      write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
+      panda = Panda()
+      panda.can_recv = self.can_sock
+      panda.can_send = self.pm.sock['sendcan']
+      panda.set_safety_mode(Panda.SAFETY_ELM327)
+      uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
+      session_type : SESSION_TYPE = 0x07 
+      uds_client.diagnostic_session_control(session_type)
+      fw_version_data_id : DATA_IDENTIFIER_TYPE = 0xf100
+      fw_version = uds_client.read_data_by_identifier(fw_version_data_id)
+      config_data_id : DATA_IDENTIFIER_TYPE = 0x0142
+      new_config = SUPPORTED_FW_VERSIONS[fw_version]["tracks_enabled"]
+      uds_client.write_data_by_identifier(config_data_id, new_config)
     except:
       print("An exception occurred")
+
+    try:
+      panda = Panda()
+      panda.can_recv = self.can_sock
+      panda.can_send = self.pm.sock['sendcan']
+      panda.set_safety_mode(Panda.SAFETY_ELM327)
+      uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
+      session_type : SESSION_TYPE = 0x07 
+      uds_client.diagnostic_session_control(session_type)
+      fw_version_data_id : DATA_IDENTIFIER_TYPE = 0xf100
+      fw_version = uds_client.read_data_by_identifier(fw_version_data_id)
+      config_data_id : DATA_IDENTIFIER_TYPE = 0x0142
+      new_config = SUPPORTED_FW_VERSIONS[fw_version]["tracks_enabled"]
+      uds_client.write_data_by_identifier(config_data_id, new_config)
+    except:
+      print("An exception occurred")
+    
 
     
     self.CC = car.CarControl.new_message()
