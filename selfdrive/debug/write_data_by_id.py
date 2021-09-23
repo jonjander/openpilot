@@ -25,7 +25,6 @@ def write_data_by_id(ecu_addr, session_type, data_id, data_value, logcan, sendca
         return True
       print(f"ecu write data by id retry ({i+1}) ...")
     except Exception:
-      time.sleep(1)
       cloudlog.warning(f"ecu write data by id exception: {traceback.format_exc()}")
 
   return False
