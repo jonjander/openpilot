@@ -277,18 +277,14 @@ class CarInterface(CarInterfaceBase):
   @staticmethod
   def init(CP, logcan, sendcan):
     try:
-      panda = Panda()
-      panda.can_recv = logcan
-      panda.can_send = sendcan
-      panda.set_safety_mode(Panda.SAFETY_ELM327)
-      session_type : SESSION_TYPE = 0x07 
-      uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
-    except:
-      print("Setup failed")
-    
-    try:
-      for i in range(15):
+      for i in range(50):
         try:
+          panda = Panda()
+          panda.can_recv = logcan
+          panda.can_send = sendcan
+          panda.set_safety_mode(Panda.SAFETY_ELM327)
+          session_type : SESSION_TYPE = 0x07 
+          uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
           uds_client.diagnostic_session_control(session_type)
           config_data_id : DATA_IDENTIFIER_TYPE = 0x0142
           new_config = b"\x00\x00\x00\x01\x00\x01"
