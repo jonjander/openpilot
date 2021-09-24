@@ -151,7 +151,7 @@ class Controls:
           panda = Panda()
           panda.can_recv = self.can_sock
           panda.can_send = self.pm.sock['sendcan']
-          panda.set_safety_mode(Panda.SAFETY_ELM327)
+          # panda.set_safety_mode(Panda.SAFETY_HYUNDAI_LEGACY)
           session_type : SESSION_TYPE = 0x07 
           uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
           uds_client.diagnostic_session_control(session_type)
