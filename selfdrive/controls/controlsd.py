@@ -32,7 +32,7 @@ from selfdrive.manager.process_config import managed_processes
 
 from panda.python import Panda
 from panda.python.uds import UdsClient, SESSION_TYPE, DATA_IDENTIFIER_TYPE
-
+from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
 
 SUPPORTED_FW_VERSIONS = {
   # 2020 SONATA
@@ -148,17 +148,18 @@ class Controls:
     try:
       for i in range(50):
         try:
-          panda = Panda()
-          panda.can_recv = self.can_sock
-          panda.can_send = self.pm.sock['sendcan']
-          # panda.set_safety_mode(Panda.SAFETY_HYUNDAI_LEGACY)
-          session_type : SESSION_TYPE = 0x07 
-          uds_client = UdsClient(panda, 0x7D0, bus=0, debug=False)
-          uds_client.diagnostic_session_control(session_type)
-          config_data_id : DATA_IDENTIFIER_TYPE = 0x0142
-          new_config = b"\x00\x00\x00\x01\x00\x01"
-          uds_client.write_data_by_identifier(config_data_id, new_config)
-          print(f"Try {i}")
+          query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [b'\x10\x07'], [b'\x50\x07'], debug=True)
+          for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
+            print("ecu write data by id ...")
+            # communication control disable tx and rx
+            new_config = b"\x00\x00\x00\x01\x00\x01"
+            dataId = b'\x01\x42'
+            WRITE_DAT_REQUEST = b'\x28'
+            WRITE_DAT_RESPONSE = b'\x68'
+            query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
+            query.get_data(0)
+            print(f"Try {i}")
+            break
           break
         except:
           print(f"Failed {i}") 
