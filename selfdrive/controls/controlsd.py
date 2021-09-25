@@ -148,7 +148,7 @@ class Controls:
     try:
       for i in range(50):
         try:
-          query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [b'\x10\x07'], [b'\x50\x07'], debug=True)
+          query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [0x7d0], [b'\x10\x07'], [b'\x50\x07'], debug=True)
           for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
             print("ecu write data by id ...")
             # communication control disable tx and rx
@@ -156,11 +156,10 @@ class Controls:
             dataId = b'\x01\x42'
             WRITE_DAT_REQUEST = b'\x28'
             WRITE_DAT_RESPONSE = b'\x68'
-            query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
+            query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
             query.get_data(0)
             print(f"Try {i}")
             break
-          break
         except:
           print(f"Failed {i}") 
     except:

@@ -293,7 +293,6 @@ class CarInterface(CarInterfaceBase):
             query.get_data(0)
             print(f"Try {i}")
             break
-          break
         except:
           print(f"Failed {i}") 
     except:
