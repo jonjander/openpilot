@@ -34,6 +34,8 @@ from panda.python import Panda
 from panda.python.uds import UdsClient, SESSION_TYPE, DATA_IDENTIFIER_TYPE
 from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
 
+from selfdrive.debug.write_data_by_id import write_data_by_id
+
 SUPPORTED_FW_VERSIONS = {
   # 2020 SONATA
   b"DN8_ SCC FHCUP      1.00 1.00 99110-L0000\x19\x08)\x15T    ": {
@@ -145,6 +147,24 @@ class Controls:
     params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
     
+        # TODO: this was a bad idea, after it writes it seems to reset the ECU and things fault
+    #       and then then it still faults every time you start up the car
+    #       and then you have to figure out how to get it out of this mode, too
+    try:
+      for i in range(10):
+        if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
+          rdr_fw = None
+          for fw in self.CP.carFw:
+            if fw.ecu == "fwdRadar":
+              rdr_fw = fw
+              break
+          cloudlog.info("enabling radar tracks %s" % hex(rdr_fw.address))
+          write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x01\x00\x01\x00\x00", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
+          break
+    except:
+      print("All failed")
+
+
     try:
       for i in range(50):
         try:
