@@ -41,5 +41,5 @@ if __name__ == "__main__":
   #         so you have to figure out how to un-set writing this data id before it will go away
   # TODO: check ECU firmware version before writing (to ensure writing data won't mess anything up)
   # hyundai enable radar tracks
-  result = write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x00\x00\x01\x00\x01", logcan, sendcan, 0, debug=False)
+  result = write_data_by_id(0x7D0, b"\x07", b"\x01\x42", b"\x00\x01\x00\x01\x00\x00\x00", logcan, sendcan, 0, debug=False)
   print(f"success: {result}")
