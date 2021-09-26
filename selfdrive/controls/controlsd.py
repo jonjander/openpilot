@@ -130,7 +130,7 @@ class Controls:
       print(f"Found fwdRadar: {rdr_fw.fwVersion}")
       if rdr_fw.fwVersion in [b'DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ', b'\xf1\x8799110Q4500\xf1\000DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00']:
         try:
-          for i in range(10):
+          for i in range(40):
             try:
               query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [b'\x10\x07'], [b'\x50\x07'], debug=True)
               for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
