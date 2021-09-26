@@ -8,12 +8,6 @@ from selfdrive.car.hyundai.radar_interface import RADAR_START_ADDR
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
-from selfdrive.debug.write_data_by_id import write_data_by_id
-
-from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
-
-from panda.python import Panda
-from panda.python.uds import UdsClient, SESSION_TYPE, DATA_IDENTIFIER_TYPE
 
 
 ButtonType = car.CarState.ButtonEvent.Type
@@ -32,7 +26,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
     ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1]
     # CAR.KIA_NIRO_EV
-    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE]
+    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.KIA_NIRO_EV]
     ret.safetyParam = 0
 
     # Most Hyundai car ports are community features for now
@@ -278,26 +272,6 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def init(CP, logcan, sendcan):
-    # try:
-    #   for i in range(50):
-    #     try:
-    #       query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [b'\x10\x07'], [b'\x50\x07'], debug=True)
-    #       for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
-    #         print("ecu write data by id ...")
-    #         # communication control disable tx and rx
-    #         new_config = b"\x00\x00\x00\x01\x00\x01"
-    #         dataId = b'\x01\x42'
-    #         WRITE_DAT_REQUEST = b'\x2e'
-    #         WRITE_DAT_RESPONSE = b'\x68'
-    #         query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
-    #         query.get_data(0)
-    #         print(f"Try {i}")
-    #         break
-    #     except:
-    #       print(f"Failed {i}") 
-    # except:
-    #   print("All failed")
-    
     if CP.openpilotLongitudinalControl:
       disable_ecu(logcan, sendcan, addr=0x7d0, com_cont_req=b'\x28\x83\x01')
       

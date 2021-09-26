@@ -29,35 +29,8 @@ from selfdrive.controls.lib.vehicle_model import VehicleModel
 from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
-
-from panda.python import Panda
-from panda.python.uds import UdsClient, SESSION_TYPE, DATA_IDENTIFIER_TYPE
 from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
 
-from selfdrive.debug.write_data_by_id import write_data_by_id
-
-SUPPORTED_FW_VERSIONS = {
-  # 2020 SONATA
-  b"DN8_ SCC FHCUP      1.00 1.00 99110-L0000\x19\x08)\x15T    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  },
-  # 2021 SONATA HYBRID
-  b"DNhe SCC FHCUP      1.00 1.02 99110-L5000 \x01#\x15#    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  }, 
-  # 2020 PALISADE
-  b"LX2_ SCC FHCUP      1.00 1.04 99110-S8100\x19\x05\x02\x16V    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  },
-  # 2021 Kia Niro Ev
-  b"DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ": {
-    "default_config": b"\x00\x00\x00\x01\x00\x00",
-    "tracks_enabled": b"\x00\x00\x00\x01\x00\x01",
-  },
-}
 
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
@@ -153,20 +126,19 @@ class Controls:
           query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [0x7d0], [b'\x10\x07'], [b'\x50\x07'], debug=True)
           for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
             print("ecu write data by id ...")
-            # communication control disable tx and rx
             new_config = b"\x00\x00\x00\x01\x00\x01"
             dataId = b'\x01\x42'
             WRITE_DAT_REQUEST = b'\x2e'
             WRITE_DAT_RESPONSE = b'\x68'
             query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
             query.get_data(0)
-            print(f"Try {i}")
+            print(f"Retry {i}")
             break
           break
         except Exception as e:
           print(f"Failed {i}: {e}") 
     except Exception as e:
-      print("All failed" + str(e))
+      print("Failed to enable tracks" + str(e))
     
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
