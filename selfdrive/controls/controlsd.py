@@ -148,7 +148,7 @@ class Controls:
     put_nonblocking("CarParamsCache", cp_bytes)
     
     try:
-      for i in range(50):
+      for i in range(10):
         try:
           query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [0x7d0], [b'\x10\x07'], [b'\x50\x07'], debug=True)
           for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
@@ -162,6 +162,7 @@ class Controls:
             query.get_data(0)
             print(f"Try {i}")
             break
+          break
         except Exception as e:
           print(f"Failed {i}: {e}") 
     except Exception as e:
