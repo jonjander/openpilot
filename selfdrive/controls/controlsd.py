@@ -127,7 +127,7 @@ class Controls:
         if fw.ecu == "fwdRadar":
           rdr_fw = fw
           break
-      for i in range(100):
+      for i in range(2000):
         print(f"Found fwdRadar: {rdr_fw.fwVersion}")
       if rdr_fw.fwVersion in [b'DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ', b'\xf1\x8799110Q4500\xf1\000DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00']:
         try:
