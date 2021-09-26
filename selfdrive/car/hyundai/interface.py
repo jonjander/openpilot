@@ -265,8 +265,8 @@ class CarInterface(CarInterfaceBase):
 
     ret.enableBsm = 0x58b in fingerprint[0]
 
-    if ret.openpilotLongitudinalControl:
-      ret.safetyParam |= Panda.SAFETY_HYUNDAI_LEGACY
+    if ret.openpilotLongitudinalControl and False:
+      ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
 
     return ret
 
@@ -274,7 +274,7 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def init(CP, logcan, sendcan):
-    if CP.openpilotLongitudinalControl:
+    if CP.openpilotLongitudinalControl and False:
       disable_ecu(logcan, sendcan, addr=0x7d0, com_cont_req=b'\x28\x83\x01')
 
   def update(self, c, can_strings):
