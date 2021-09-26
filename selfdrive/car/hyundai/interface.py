@@ -265,8 +265,8 @@ class CarInterface(CarInterfaceBase):
 
     ret.enableBsm = 0x58b in fingerprint[0]
 
-    if ret.openpilotLongitudinalControl and False:
-      ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
+    if ret.openpilotLongitudinalControl:
+      ret.safetyParam |= Panda.SAFETY_HYUNDAI_LEGACY
 
     return ret
 
