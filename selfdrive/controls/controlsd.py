@@ -161,8 +161,8 @@ class Controls:
           cloudlog.info("enabling radar tracks %s" % hex(rdr_fw.address))
           write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x01\x00\x01\x00\x00", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
           break
-    except:
-      print("All failed")
+    except Exception as e:
+      print("All failed" + str(e))
 
 
     try:
@@ -180,10 +180,10 @@ class Controls:
             query.get_data(0)
             print(f"Try {i}")
             break
-        except:
-          print(f"Failed {i}") 
-    except:
-      print("All failed")
+        except Exception as e:
+          print(f"Failed {i}: {e}") 
+    except Exception as e:
+      print("All failed" + str(e))
     
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
