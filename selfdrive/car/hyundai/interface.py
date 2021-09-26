@@ -245,6 +245,11 @@ class CarInterface(CarInterfaceBase):
                      CAR.SONATA_LF, CAR.KIA_NIRO_EV, CAR.KIA_OPTIMA, CAR.VELOSTER, CAR.KIA_STINGER,
                      CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.KIA_CEED, CAR.ELANTRA]:
       ret.safetyModel = car.CarParams.SafetyModel.hyundaiLegacy
+      if ret.openpilotLongitudinalControl:
+        ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
+    else:
+      if ret.openpilotLongitudinalControl:
+        ret.safetyParam |= Panda.FLAG_HYUNDAI_LEGACY_LONG
 
     # set appropriate safety param for gas signal
     if candidate in HYBRID_CAR:
@@ -264,9 +269,6 @@ class CarInterface(CarInterfaceBase):
                                                                          tire_stiffness_factor=tire_stiffness_factor)
 
     ret.enableBsm = 0x58b in fingerprint[0]
-
-    if ret.openpilotLongitudinalControl:
-      ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
 
     return ret
 
