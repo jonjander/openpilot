@@ -147,24 +147,6 @@ class Controls:
     params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
     
-        # TODO: this was a bad idea, after it writes it seems to reset the ECU and things fault
-    #       and then then it still faults every time you start up the car
-    #       and then you have to figure out how to get it out of this mode, too
-    try:
-      for i in range(10):
-        if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
-          rdr_fw = None
-          for fw in self.CP.carFw:
-            if fw.ecu == "fwdRadar":
-              rdr_fw = fw
-              break
-          cloudlog.info("enabling radar tracks %s" % hex(rdr_fw.address))
-          write_data_by_id(rdr_fw.address, b"\x07", b"\x01\x42", b"\x00\x01\x00\x01\x00\x00", self.can_sock, self.pm.sock['sendcan'], 0, timeout=1, retry=10)
-          break
-    except Exception as e:
-      print("All failed" + str(e))
-
-
     try:
       for i in range(50):
         try:
@@ -174,7 +156,7 @@ class Controls:
             # communication control disable tx and rx
             new_config = b"\x00\x00\x00\x01\x00\x01"
             dataId = b'\x01\x42'
-            WRITE_DAT_REQUEST = b'\x28'
+            WRITE_DAT_REQUEST = b'\x2e'
             WRITE_DAT_RESPONSE = b'\x68'
             query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
             query.get_data(0)

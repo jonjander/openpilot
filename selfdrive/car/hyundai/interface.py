@@ -287,7 +287,7 @@ class CarInterface(CarInterfaceBase):
             # communication control disable tx and rx
             new_config = b"\x00\x00\x00\x01\x00\x01"
             dataId = b'\x01\x42'
-            WRITE_DAT_REQUEST = b'\x28'
+            WRITE_DAT_REQUEST = b'\x2e'
             WRITE_DAT_RESPONSE = b'\x68'
             query = IsoTpParallelQuery(sendcan, logcan, 0, [0x7d0], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
             query.get_data(0)
