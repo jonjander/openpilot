@@ -129,7 +129,9 @@ class Controls:
           break
       for i in range(2000):
         print(f"Found fwdRadar: {rdr_fw.fwVersion}")
-      if rdr_fw.fwVersion in [b'DEev SCC F-CUP      1.00 1.00 99110-Q4500 \x07\x03\t%    ', b'\xf1\x8799110Q4500\xf1\000DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00']:
+      if rdr_fw.fwVersion in [b'\xf1\x8799110q4500\xf1\x00DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00']:
+        for i in range(10):
+          print(f"O yes")
         try:
           for i in range(40):
             try:
