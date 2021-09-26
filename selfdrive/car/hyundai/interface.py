@@ -26,7 +26,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
     ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1]
     # CAR.KIA_NIRO_EV
-    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.KIA_NIRO_EV]
+    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE]
     ret.safetyParam = 0
 
     # Most Hyundai car ports are community features for now
@@ -245,11 +245,7 @@ class CarInterface(CarInterfaceBase):
                      CAR.SONATA_LF, CAR.KIA_NIRO_EV, CAR.KIA_OPTIMA, CAR.VELOSTER, CAR.KIA_STINGER,
                      CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.KIA_CEED, CAR.ELANTRA]:
       ret.safetyModel = car.CarParams.SafetyModel.hyundaiLegacy
-      if ret.openpilotLongitudinalControl:
-        ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
-    else:
-      if ret.openpilotLongitudinalControl:
-        ret.safetyParam |= Panda.FLAG_HYUNDAI_LEGACY_LONG
+      
 
     # set appropriate safety param for gas signal
     if candidate in HYBRID_CAR:
@@ -270,6 +266,12 @@ class CarInterface(CarInterfaceBase):
 
     ret.enableBsm = 0x58b in fingerprint[0]
 
+    if ret.openpilotLongitudinalControl:
+      if ret.safetyModel == car.CarParams.SafetyModel.hyundaiLegacy:
+        ret.safetyParam |= Panda.FLAG_HYUNDAI_LEGACY_LONG
+      else:
+        ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
+      
     return ret
 
   
