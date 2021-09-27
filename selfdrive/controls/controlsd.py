@@ -130,8 +130,6 @@ class Controls:
           break
       print(f"Found fwdRadar: {rdr_fw.fwVersion}")
       if rdr_fw.fwVersion in [b'\xf1\x8799110Q4500\xf1\x00DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00'] or True:
-        for i in range(10):
-          print(f"O yes")
         try:
           for i in range(40):
             try:
