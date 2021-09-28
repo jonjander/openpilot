@@ -162,7 +162,7 @@ class Controls:
 
     #Enable radar tracks
     print("Try to enable radar tracks")
-    if self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
+    if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
       rdr_fw = None
       for fw in self.CP.carFw:
         if fw.ecu == "fwdRadar":
