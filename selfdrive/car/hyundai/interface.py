@@ -9,7 +9,6 @@ from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness,
 from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
 
-
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
 
@@ -25,12 +24,10 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "hyundai"
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
     ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1]
-    # CAR.KIA_NIRO_EV
-    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.KIA_NIRO_EV]
+
+    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.SANTA_FE, CAR.KIA_NIRO_EV]
     ret.safetyParam = 0
 
-    # Most Hyundai car ports are community features for now
-    ret.communityFeature = candidate not in [CAR.SONATA, CAR.PALISADE] or ret.openpilotLongitudinalControl
     ret.pcmCruise = not ret.openpilotLongitudinalControl
 
     ret.steerActuatorDelay = 0.1  # Default delay
@@ -43,12 +40,21 @@ class CarInterface(CarInterfaceBase):
 
     ret.longitudinalTuning.kpV = [0.1]
     ret.longitudinalTuning.kiV = [0.0]
-    ret.stoppingDecelRate = 2.0
+    ret.stopAccel = 0.0
     ret.startAccel = 0.0
 
     ret.longitudinalActuatorDelayUpperBound = 1.0 # s
 
     if candidate == CAR.SANTA_FE:
+      ret.lateralTuning.pid.kf = 0.00005
+      ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG
+      ret.wheelbase = 2.766
+      # Values from optimizer
+      ret.steerRatio = 16.55  # 13.8 is spec end-to-end
+      tire_stiffness_factor = 0.82
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.2, 0.35], [0.05, 0.09]]
+    elif candidate == CAR.SANTA_FE_2022:
       ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG
       ret.wheelbase = 2.766

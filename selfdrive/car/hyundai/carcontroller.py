@@ -44,7 +44,6 @@ class CarController():
     self.car_fingerprint = CP.carFingerprint
     self.steer_rate_limited = False
     self.last_resume_frame = 0
-    
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert, hud_speed,
              left_lane, right_lane, left_lane_depart, right_lane_depart):
@@ -70,7 +69,7 @@ class CarController():
     # tester present - w/ no response (keeps radar disabled)
     if CS.CP.openpilotLongitudinalControl:
       if (frame % 100) == 0:
-        can_sends.append([0x7D0, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", 0]) #notetoself
+        can_sends.append([0x7D0, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", 0])
 
     can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
                                    CS.lkas11, sys_warning, sys_state, enabled,
@@ -105,7 +104,7 @@ class CarController():
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.IONIQ, CAR.KIA_NIRO_EV, CAR.KIA_NIRO_HEV_2021,
                                                    CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV, CAR.KIA_CEED, CAR.KIA_SELTOS, CAR.KONA_EV,
-                                                   CAR.ELANTRA_2021, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV]:
+                                                   CAR.ELANTRA_2021, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.SANTA_FE_2022]:
       can_sends.append(create_lfahda_mfc(self.packer, enabled))
 
     # 5 Hz ACC options

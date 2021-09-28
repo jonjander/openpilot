@@ -65,6 +65,7 @@ MQB_LDW_MESSAGES = {
 # Exception: SEAT Leon and SEAT Ateca share a chassis code
 
 class CAR:
+  ARTEON_MK1 = "VOLKSWAGEN ARTEON 1ST GEN"          # Chassis AN, Mk1 VW Arteon and variants
   ATLAS_MK1 = "VOLKSWAGEN ATLAS 1ST GEN"            # Chassis CA, Mk1 VW Atlas and Atlas Cross Sport
   GOLF_MK7 = "VOLKSWAGEN GOLF 7TH GEN"              # Chassis 5G/AU/BA/BE, Mk7 VW Golf and variants
   JETTA_MK7 = "VOLKSWAGEN JETTA 7TH GEN"            # Chassis BU, Mk7 Jetta
@@ -94,6 +95,23 @@ class CAR:
 # them repaired by the tuner before including them in openpilot.
 
 FW_VERSIONS = {
+  CAR.ARTEON_MK1: {
+    (Ecu.engine, 0x7e0, None): [
+      b'\xf1\x873G0906259P \xf1\x890001',
+    ],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xf1\x8709G927158L \xf1\x893611',
+    ],
+    (Ecu.srs, 0x715, None): [
+      b'\xf1\x873Q0959655DL\xf1\x890732\xf1\x82\0161812141812171105141123052J00',
+    ],
+    (Ecu.eps, 0x712, None): [
+      b'\xf1\x875Q0910143C \xf1\x892211\xf1\x82\00567B0020800',
+    ],
+    (Ecu.fwdRadar, 0x757, None): [
+      b'\xf1\x872Q0907572T \xf1\x890383',
+    ],
+  },
   CAR.ATLAS_MK1: {
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x8703H906026AA\xf1\x899970',
@@ -131,6 +149,7 @@ FW_VERSIONS = {
       b'\xf1\x8704E906027GR\xf1\x892394',
       b'\xf1\x8704E906027HD\xf1\x893742',
       b'\xf1\x8704E906027MA\xf1\x894958',
+      b'\xf1\x8704L906021DT\xf1\x895520',
       b'\xf1\x8704L906026BP\xf1\x897608',
       b'\xf1\x8704L906026NF\xf1\x899528',
       b'\xf1\x8704L906056CL\xf1\x893823',
@@ -170,6 +189,7 @@ FW_VERSIONS = {
       b'\xf1\x870D9300012  \xf1\x895045',
       b'\xf1\x870D9300014M \xf1\x895004',
       b'\xf1\x870D9300020S \xf1\x895201',
+      b'\xf1\x870D9300040A \xf1\x893613',
       b'\xf1\x870D9300040S \xf1\x894311',
       b'\xf1\x870D9300041H \xf1\x895220',
       b'\xf1\x870DD300045K \xf1\x891120',
@@ -220,6 +240,7 @@ FW_VERSIONS = {
       b'\xf1\x875Q0909144AB\xf1\x891082\xf1\x82\00521A00442A1',
       b'\xf1\x875Q0909144AB\xf1\x891082\xf1\x82\00521A00642A1',
       b'\xf1\x875Q0909144AB\xf1\x891082\xf1\x82\00521A07B05A1',
+      b'\xf1\x875Q0909144L \xf1\x891021\xf1\x82\00521A00602A0',
       b'\xf1\x875Q0909144L \xf1\x891021\xf1\x82\00522A00402A0',
       b'\xf1\x875Q0909144P \xf1\x891043\xf1\x82\00511A00403A0',
       b'\xf1\x875Q0909144R \xf1\x891061\xf1\x82\00516A00604A1',
@@ -236,6 +257,7 @@ FW_VERSIONS = {
       b'\xf1\x875QN909144B \xf1\x895082\xf1\x82\00571A01A18A1',
     ],
     (Ecu.fwdRadar, 0x757, None): [
+      b'\xf1\x875Q0907567G \xf1\x890390\xf1\x82\00101',
       b'\xf1\x875Q0907572A \xf1\x890141\xf1\x82\00101',
       b'\xf1\x875Q0907572B \xf1\x890200\xf1\x82\00101',
       b'\xf1\x875Q0907572C \xf1\x890210\xf1\x82\00101',
