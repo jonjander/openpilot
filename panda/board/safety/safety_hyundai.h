@@ -389,7 +389,7 @@ static const addr_checks* hyundai_init(int16_t param) {
   if (hyundai_longitudinal) {
     hyundai_rx_checks = (addr_checks){hyundai_long_addr_checks, HYUNDAI_LONG_ADDR_CHECK_LEN};
   } else if (hyundai_legacy_longitudinal) {
-    hyundai_rx_checks = (addr_checks){hyundai_legacy_long_addr_checks, HYUNDAI_LONG_ADDR_CHECK_LEN};
+    hyundai_rx_checks = (addr_checks){hyundai_legacy_long_addr_checks, HYUNDAI_LEGACY_LONG_ADDR_CHECK_LEN};
   } else {
     hyundai_rx_checks = (addr_checks){hyundai_addr_checks, HYUNDAI_ADDR_CHECK_LEN};
   }
