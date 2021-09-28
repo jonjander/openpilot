@@ -1,9 +1,5 @@
 Version 0.8.10 (2021-XX-XX)
 ========================
-<<<<<<< HEAD
- * Škoda Kamiq 2021 support thanks to jyoung8607!
- * Škoda Karoq 2019 support thanks to jyoung8607!
-=======
  * New driving model with improved
    * Trained on one million minutes!!!
    * Fixed lead training making lead predictions significantly more accurate.
@@ -17,7 +13,6 @@ Version 0.8.10 (2021-XX-XX)
  * Škoda Kamiq 2021 support thanks to jyoung8607!
  * Škoda Karoq 2019 support thanks to jyoung8607!
  * Volkswagen Arteon 2021 support thanks to jyoung8607!
->>>>>>> commaai/master-ci
  * Volkswagen California 2021 support thanks to jyoung8607!
 
 Version 0.8.9 (2021-09-14)
