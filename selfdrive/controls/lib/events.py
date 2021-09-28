@@ -603,6 +603,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
     ET.NO_ENTRY: NoEntryAlert("Speaker not found"),
   },
 
+  EventName.radarTracksEnableFailed: {
+    ET.PERMANENT: NormalPermanentAlert("Failed to enable radar tracks", "Reboot your Device"),
+    ET.NO_ENTRY: NoEntryAlert("Failed to enable radar tracks"),
+  },
+
   EventName.tooDistracted: {
     ET.NO_ENTRY: NoEntryAlert("Distraction Level Too High"),
   },

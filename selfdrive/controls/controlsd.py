@@ -186,6 +186,7 @@ class Controls:
             break
           except Exception as e:
             print(f"Failed {i}: {e}") 
+            self.events.add(EventName.radarTracksEnableFailed, static=True)
   
 
     self.startup_event = get_startup_event(car_recognized, controller_available, len(self.CP.carFw) > 0)
