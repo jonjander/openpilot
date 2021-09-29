@@ -122,7 +122,7 @@ class Controls:
     put_nonblocking("CarParamsCache", cp_bytes)
     
     print("Try to enable radar tracks")
-    if self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
+    if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
       rdr_fw = None
       for fw in self.CP.carFw:
         if fw.ecu == "fwdRadar":
@@ -130,25 +130,23 @@ class Controls:
           break
       print(f"Found fwdRadar: {rdr_fw.fwVersion}")
       if rdr_fw.fwVersion in [b'\xf1\x8799110Q4500\xf1\x00DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00'] or True:
-        try:
-          for i in range(40):
-            try:
-              query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [b'\x10\x07'], [b'\x50\x07'], debug=True)
-              for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
-                print("ecu write data by id ...")
-                new_config = b"\x00\x00\x00\x01\x00\x01"
-                dataId = b'\x01\x42'
-                WRITE_DAT_REQUEST = b'\x2e'
-                WRITE_DAT_RESPONSE = b'\x68'
-                query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
-                query.get_data(0)
-                print(f"Retry {i+1}")
-                break
+        for i in range(40):
+          try:
+            query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [b'\x10\x07'], [b'\x50\x07'], debug=True)
+            for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
+              print("ecu write data by id ...")
+              new_config = b"\x00\x00\x00\x01\x00\x01"
+              dataId = b'\x01\x42'
+              WRITE_DAT_REQUEST = b'\x2e'
+              WRITE_DAT_RESPONSE = b'\x68'
+              query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
+              query.get_data(0)
+              print(f"Retry {i+1}")
               break
-            except Exception as e:
-              print(f"Failed {i}: {e}") 
-        except Exception as e:
-          print("Failed to enable tracks" + str(e))
+            break
+          except Exception as e:
+            print(f"Failed {i}: {e}") 
+
     
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
