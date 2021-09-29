@@ -147,7 +147,6 @@ class Controls:
           except Exception as e:
             print(f"Failed {i}: {e}") 
 
-    
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
     self.events = Events()
