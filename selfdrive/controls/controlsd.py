@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-from logging import fatal
 import os
 import math
 from numbers import Number
-from time import sleep
 
 from cereal import car, log
 from common.numpy_fast import clip
@@ -11,7 +9,6 @@ from common.realtime import sec_since_boot, config_realtime_process, Priority, R
 from common.profiler import Profiler
 from common.params import Params, put_nonblocking
 import cereal.messaging as messaging
-from selfdrive.car.hyundai.values import CAR as HYUNDAI_CAR
 from selfdrive.config import Conversions as CV
 from selfdrive.swaglog import cloudlog
 from selfdrive.boardd.boardd import can_list_to_can_capnp
@@ -30,8 +27,6 @@ from selfdrive.controls.lib.vehicle_model import VehicleModel
 from selfdrive.locationd.calibrationd import Calibration
 from selfdrive.hardware import HARDWARE, TICI, EON
 from selfdrive.manager.process_config import managed_processes
-from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
-
 
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
@@ -120,32 +115,6 @@ class Controls:
     cp_bytes = self.CP.to_bytes()
     params.put("CarParams", cp_bytes)
     put_nonblocking("CarParamsCache", cp_bytes)
-    
-    print("Try to enable radar tracks")
-    if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
-      rdr_fw = None
-      for fw in self.CP.carFw:
-        if fw.ecu == "fwdRadar":
-          rdr_fw = fw
-          break
-      print(f"Found fwdRadar: {rdr_fw.fwVersion}")
-      if rdr_fw.fwVersion in [b'\xf1\x8799110Q4500\xf1\x00DEev SCC F-CUP      1.00 1.00 99110-Q4500         \xf1\xa01.00'] or True:
-        for i in range(40):
-          try:
-            query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [b'\x10\x07'], [b'\x50\x07'], debug=True)
-            for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
-              print("ecu write data by id ...")
-              new_config = b"\x00\x00\x00\x01\x00\x01"
-              dataId = b'\x01\x42'
-              WRITE_DAT_REQUEST = b'\x2e'
-              WRITE_DAT_RESPONSE = b'\x68'
-              query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
-              query.get_data(0)
-              print(f"Retry {i+1}")
-              break
-            break
-          except Exception as e:
-            print(f"Failed {i}: {e}") 
 
     self.CC = car.CarControl.new_message()
     self.AM = AlertManager()
@@ -184,8 +153,7 @@ class Controls:
     # TODO: no longer necessary, aside from process replay
     self.sm['liveParameters'].valid = True
 
-    self.startup_event = get_startup_event(car_recognized, controller_available, self.CP.fuzzyFingerprint,
-                                           len(self.CP.carFw) > 0)
+    self.startup_event = get_startup_event(car_recognized, controller_available, len(self.CP.carFw) > 0)
 
     if not sounds_available:
       self.events.add(EventName.soundsUnavailable, static=True)
@@ -557,7 +525,7 @@ class Controls:
     CC.enabled = self.enabled
     CC.actuators = actuators
 
-    CC.cruiseControl.cancel = not self.CP.pcmCruise or (not self.enabled and CS.cruiseState.enabled)
+    CC.cruiseControl.cancel = CS.cruiseState.enabled and (not self.enabled or not self.CP.pcmCruise)
     if self.joystick_mode and self.sm.rcv_frame['testJoystick'] > 0 and self.sm['testJoystick'].buttons[0]:
       CC.cruiseControl.cancel = True
 
