@@ -71,11 +71,7 @@ TogglesPanel::TogglesPanel(QWidget *parent) : ListWidget(parent) {
                                   "../assets/offroad/icon_road.png",
                                   this));
   
-  addItem(new ParamControl("DisableRadar",
-                                  "Disable radar",
-                                  "Disable radar",
-                                  "../assets/offroad/icon_road.png",
-                                  this));
+  
 
 
 #ifdef ENABLE_MAPS
@@ -85,6 +81,12 @@ TogglesPanel::TogglesPanel(QWidget *parent) : ListWidget(parent) {
                                   "../assets/offroad/icon_metric.png",
                                   this));
 #endif
+  addItem(new ParamControl("DisableRadar_Allow",
+                                  "Allow disable radar",
+                                  "Allow disable radar",
+                                  "../assets/offroad/icon_speed_limit.png",
+                                  this));
+
   if (params.getBool("DisableRadar_Allow")) {
     addItem(new ParamControl("DisableRadar",
                              "openpilot Longitudinal Control",
