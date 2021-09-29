@@ -78,3 +78,4 @@ selfdrive/modeld/thneed/compile
 models/*.thneed
 
 *.bz2
+/.vs/slnx.sqlite
