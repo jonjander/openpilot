@@ -86,6 +86,7 @@ TogglesPanel::TogglesPanel(QWidget *parent) : QWidget(parent) {
                              "openpilot will disable the car's radar and will take over control of gas and brakes. Warning: this disables AEB!",
                              "../assets/offroad/icon_speed_limit.png",
                              this));
+  }
 
 #ifdef ENABLE_MAPS
   toggles.append(new ParamControl("NavSettingTime24h",
