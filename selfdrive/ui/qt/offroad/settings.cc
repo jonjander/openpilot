@@ -74,14 +74,14 @@ TogglesPanel::TogglesPanel(QWidget *parent) : QWidget(parent) {
                                   "../assets/offroad/icon_road.png",
                                   this));
 
-  addItem(new ParamControl("DisableRadar_Allow",
+  toggles.append(new ParamControl("DisableRadar_Allow",
                                   "Allow disable radar",
                                   "Allow disable radar",
                                   "../assets/offroad/icon_speed_limit.png",
                                   this));
 
   if (params.getBool("DisableRadar_Allow")) {
-    addItem(new ParamControl("DisableRadar",
+    toggles.append(new ParamControl("DisableRadar",
                              "openpilot Longitudinal Control",
                              "openpilot will disable the car's radar and will take over control of gas and brakes. Warning: this disables AEB!",
                              "../assets/offroad/icon_speed_limit.png",
