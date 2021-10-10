@@ -79,7 +79,6 @@ TogglesPanel::TogglesPanel(QWidget *parent) : QWidget(parent) {
                                   "Allow disable radar",
                                   "../assets/offroad/icon_speed_limit.png",
                                   this));
-
   
   toggles.append(new ParamControl("DisableRadar",
                             "openpilot Longitudinal Control",
