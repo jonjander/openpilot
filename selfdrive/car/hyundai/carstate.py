@@ -158,13 +158,13 @@ class CarState(CarStateBase):
       ("CF_Clu_AliveCnt1", "CLU11", 0),
 
       # ("ACCEnable", "TCS13", 0),
-      ("ACC_REQ", "TCS13", 0),
-      ("DriverBraking", "TCS13", 0),
-      ("StandStill", "TCS13", 0),
-      ("PBRAKE_ACT", "TCS13", 0),
+      # ("ACC_REQ", "TCS13", 0),
+      # ("DriverBraking", "TCS13", 0),
+      # ("StandStill", "TCS13", 0),
+      # ("PBRAKE_ACT", "TCS13", 0),
 
-      ("ESC_Off_Step", "TCS15", 0),
-      ("AVH_LAMP", "TCS15", 0),
+      # ("ESC_Off_Step", "TCS15", 0),
+      # ("AVH_LAMP", "TCS15", 0),
 
       ("CR_Mdps_StrColTq", "MDPS12", 0),
       ("CF_Mdps_ToiActive", "MDPS12", 0),
