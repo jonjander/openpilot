@@ -184,6 +184,14 @@ class NormalPermanentAlert(Alert):
 
 # ********** alert callback functions **********
 
+def below_steer_speed_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: bool) -> Alert:
+  speed = int(round(CP.minSteerSpeed * (CV.MS_TO_KPH if metric else CV.MS_TO_MPH)))
+  unit = "km/h" if metric else "mph"
+  return Alert(
+    "TAKE CONTROL",
+    "Steer Unavailable Below %d %s" % (speed, unit),
+    AlertStatus.userPrompt, AlertSize.mid,
+    Priority.MID, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0.4, .3)
 
 
 def calibration_incomplete_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: bool) -> Alert:
