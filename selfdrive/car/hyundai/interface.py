@@ -25,7 +25,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
     ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1]
 
-    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.SANTA_FE]
+    ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.SANTA_FE, CAR.KIA_NIRO_EV]
     ret.safetyParam = 0
 
     ret.pcmCruise = not ret.openpilotLongitudinalControl
@@ -280,7 +280,12 @@ class CarInterface(CarInterfaceBase):
     ret.enableBsm = 0x58b in fingerprint[0]
 
     if ret.openpilotLongitudinalControl:
-      ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
+      if candidate in [CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ_PHEV, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO,
+                       CAR.SONATA_LF, CAR.KIA_NIRO_EV, CAR.KIA_OPTIMA, CAR.VELOSTER, CAR.KIA_STINGER,
+                       CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.KIA_CEED, CAR.ELANTRA]:
+        ret.safetyParam |= Panda.FLAG_HYUNDAI_LEGACY_LONG
+      else:
+        ret.safetyParam |= Panda.FLAG_HYUNDAI_LONG
 
     return ret
 
