@@ -26,7 +26,7 @@ class CarInterface(CarInterfaceBase):
     ret.radarOffCan = RADAR_START_ADDR not in fingerprint[1]
 
     ret.openpilotLongitudinalControl = Params().get_bool("DisableRadar") and candidate in [CAR.SONATA, CAR.SONATA_HYBRID, CAR.PALISADE, CAR.SANTA_FE, CAR.IONIQ]
-
+    ret.safetyParam = 0
     ret.pcmCruise = not ret.openpilotLongitudinalControl
 
     ret.steerActuatorDelay = 0.1  # Default delay
