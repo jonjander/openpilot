@@ -70,6 +70,12 @@ TogglesPanel::TogglesPanel(QWidget *parent) : ListWidget(parent) {
                                   "In this mode openpilot will ignore lanelines and just drive how it thinks a human would.",
                                   "../assets/offroad/icon_road.png",
                                   this));
+
+  addItem(new ParamControl("DisableECU",
+                             "DisableECU",
+                             "Warning: this disables AEB!",
+                             "../assets/offroad/icon_speed_limit.png",
+                             this));
 #ifdef ENABLE_MAPS
   addItem(new ParamControl("NavSettingTime24h",
                                   "Show ETA in 24h format",
@@ -83,7 +89,6 @@ TogglesPanel::TogglesPanel(QWidget *parent) : ListWidget(parent) {
                              "openpilot will disable the car's radar and will take over control of gas and brakes. Warning: this disables AEB!",
                              "../assets/offroad/icon_speed_limit.png",
                              this));
-
   }
 
   bool record_lock = params.getBool("RecordFrontLock");
