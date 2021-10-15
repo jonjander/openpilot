@@ -3,7 +3,7 @@ from common.realtime import DT_CTRL
 from common.numpy_fast import clip, interp
 from selfdrive.config import Conversions as CV
 from selfdrive.car import apply_std_steer_torque_limits
-from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfahda_mfc, create_acc_commands, create_acc_opt, create_frt_radar_opt
+from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfahda_mfc, create_acc_commands, create_acc_opt, create_frt_radar_opt, create_scc7d0
 from selfdrive.car.hyundai.values import Buttons, CarControllerParams, CAR
 from opendbc.can.packer import CANPacker
 
@@ -44,6 +44,9 @@ class CarController():
     self.car_fingerprint = CP.carFingerprint
     self.steer_rate_limited = False
     self.last_resume_frame = 0
+    self.radarDisableActivated = False
+    self.radarDisableResetTimer = 0
+    self.radarDisableOverlapTimer = 0
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert, hud_speed,
              left_lane, right_lane, left_lane_depart, right_lane_depart):
@@ -65,6 +68,43 @@ class CarController():
                         left_lane, right_lane, left_lane_depart, right_lane_depart)
 
     can_sends = []
+
+    #region disable radar
+    if CS.CP.radarDisablePossible:
+      self.radarDisableOverlapTimer += 1
+      self.radarDisableResetTimer = 0
+      if self.radarDisableOverlapTimer >= 30:
+        self.radarDisableActivated = True
+        if 200 > self.radarDisableOverlapTimer > 36:
+          if frame % 41 == 0 or self.radarDisableOverlapTimer == 37:
+            can_sends.append(create_scc7d0(b'\x02\x10\x03\x00\x00\x00\x00\x00'))
+          elif frame % 43 == 0 or self.radarDisableOverlapTimer == 37:
+            can_sends.append(create_scc7d0(b'\x03\x28\x03\x01\x00\x00\x00\x00'))
+          elif frame % 19 == 0 or self.radarDisableOverlapTimer == 37:
+            can_sends.append(create_scc7d0(b'\x02\x10\x85\x00\x00\x00\x00\x00'))  # this disables RADAR for
+      else:
+        self.counter_init = False
+        can_sends.append(create_scc7d0(b'\x02\x10\x90\x00\x00\x00\x00\x00'))  # this enables RADAR
+        can_sends.append(create_scc7d0(b'\x03\x29\x03\x01\x00\x00\x00\x00'))
+    elif self.radarDisableActivated:
+      can_sends.append(create_scc7d0(b'\x02\x10\x90\x00\x00\x00\x00\x00'))  # this enables RADAR
+      can_sends.append(create_scc7d0(b'\x03\x29\x03\x01\x00\x00\x00\x00'))
+      self.radarDisableOverlapTimer = 0
+      if frame % 50 == 0:
+        self.radarDisableResetTimer += 1
+        if self.radarDisableResetTimer > 2:
+          self.radarDisableActivated = False
+          self.counter_init = True
+    else:
+      self.radarDisableOverlapTimer = 0
+      self.radarDisableResetTimer = 0
+
+
+    if (frame % 50 == 0 or self.radarDisableOverlapTimer == 37) and \
+            CS.CP.radarDisablePossible and self.radarDisableOverlapTimer >= 30:
+      can_sends.append(create_scc7d0(b'\x02\x3E\x00\x00\x00\x00\x00\x00'))
+    #endregion
+
 
     # tester present - w/ no response (keeps radar disabled)
     if CS.CP.openpilotLongitudinalControl:
@@ -100,6 +140,7 @@ class CarController():
       stopping = (actuators.longControlState == LongCtrlState.stopping)
       set_speed_in_units = hud_speed * (CV.MS_TO_MPH if CS.clu11["CF_Clu_SPEED_UNIT"] == 1 else CV.MS_TO_KPH)
       can_sends.extend(create_acc_commands(self.packer, enabled, accel, jerk, int(frame / 2), lead_visible, set_speed_in_units, stopping))
+
 
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.IONIQ, CAR.KIA_NIRO_EV, CAR.KIA_NIRO_HEV_2021,
