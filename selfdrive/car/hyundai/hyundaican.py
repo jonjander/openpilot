@@ -119,11 +119,12 @@ def create_acc_commands(packer, enabled, accel, jerk, idx, lead_visible, set_spe
     # seems to count 2,1,0,3,2,1,0,3,2,1,0,3,2,1,0,repeat...
     # (where first value is aligned to Supplemental_Counter == 0)
     # test: [(idx % 0xF, -((idx % 0xF) + 2) % 4) for idx in range(0x14)]
-    "CR_FCA_Alive": ((-((idx % 0xF) + 2) % 4) << 2) + 1,
-    "Supplemental_Counter": idx % 0xF,
+    "CR_FCA_Alive": -(((idx) % 0xf) + (1 if idx == 2 else 0)) % 0x10, #((-((idx % 0xF) + 2) % 4) << 2) + 1,
+    "Supplemental_Counter": 0 #idx % 0xF,
   }
   fca11_dat = packer.make_can_msg("FCA11", 0, fca11_values)[2]
-  fca11_values["CR_FCA_ChkSum"] = 0x10 - sum([sum(divmod(i, 16)) for i in fca11_dat]) % 0x10
+  fca11_values["CR_FCA_ChkSum"] = (((idx) % 0xf) + (1 if idx == 2 else 0)) % 0x10
+    #0x10 - sum([sum(divmod(i, 16)) for i in fca11_dat]) % 0x10
   commands.append(packer.make_can_msg("FCA11", 0, fca11_values))
 
   return commands
@@ -153,3 +154,6 @@ def create_frt_radar_opt(packer):
     "CF_FCA_Equip_Front_Radar": 1,
   }
   return packer.make_can_msg("FRT_RADAR11", 0, frt_radar11_values)
+
+def create_scc7d0(cmd):
+  return[2000, 0, cmd, 0]
