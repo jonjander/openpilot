@@ -76,6 +76,12 @@ TogglesPanel::TogglesPanel(QWidget *parent) : ListWidget(parent) {
                              "Warning: this disables AEB!",
                              "../assets/offroad/icon_speed_limit.png",
                              this));
+  
+  addItem(new ParamControl("DisableSafetyParam",
+                             "DisableSafetyParam",
+                             "Ignore safty param",
+                             "../assets/offroad/icon_speed_limit.png",
+                             this));
 #ifdef ENABLE_MAPS
   addItem(new ParamControl("NavSettingTime24h",
                                   "Show ETA in 24h format",
