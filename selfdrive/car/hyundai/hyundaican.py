@@ -153,6 +153,3 @@ def create_frt_radar_opt(packer):
     "CF_FCA_Equip_Front_Radar": 1,
   }
   return packer.make_can_msg("FRT_RADAR11", 0, frt_radar11_values)
-
-def create_scc7d0(cmd):
-  return[2000, 0, cmd, 0]
