@@ -152,7 +152,6 @@ class Controls:
     self.current_alert_types = [ET.PERMANENT]
     self.logged_comm_issue = False
 
-        
     print("Try to enable radar tracks")
     if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV] or True:
       rdr_fw = None
