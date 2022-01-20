@@ -186,13 +186,17 @@ void OnroadHud::updateState(const UIState &s) {
 
 
   auto leads = (*s->sm)["modelV2"].getModelV2().getLeadsV3();
-  QString leadspeed_str = leads.length() > 0 ? QString::number(std::nearbyint(leads[0].getVStd())) : "";
+  float leadSpeed = 0;
+  if (leads.length() > 0) {
+    leadSpeed = leads[0].getVStd();
+  }
+  QString leadspeed_str = leads.length() > 0 ? QString::number(std::nearbyint(leadSpeed)) : "";
 
   setProperty("is_cruise_set", cruise_set);
   setProperty("speed", QString::number(std::nearbyint(cur_speed)));
   setProperty("maxSpeed", maxspeed_str);
-  setProperty("leadSpeed", leadspeed_str);
   setProperty("speedUnit", s.scene.is_metric ? "km/h" : "mph");
+  setProperty("leadSpeed", leadspeed_str);
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
 

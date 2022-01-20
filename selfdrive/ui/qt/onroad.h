@@ -37,6 +37,7 @@ private:
   QString speed;
   QString speedUnit;
   QString maxSpeed;
+  QString leadSpeed;
   bool is_cruise_set = false;
   bool engageable = false;
   bool dmActive = false;
