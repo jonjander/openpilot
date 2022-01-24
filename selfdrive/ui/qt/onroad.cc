@@ -186,11 +186,10 @@ void OnroadHud::updateState(const UIState &s) {
 
 
   auto leads = sm["modelV2"].getModelV2().getLeadsV3();
-  float leadSpeed = 0;
+  QString leadspeed_str = "";
   if (leads[0].getProb() > .5) {
-    leadSpeed = leads[0].getVStd();
+    leadspeed_str = QString::number(std::nearbyint(leads[0].getVStd()));
   }
-  QString leadspeed_str = leads.length() > 0 ? QString::number(std::nearbyint(leadSpeed)) : "";
 
   setProperty("is_cruise_set", cruise_set);
   setProperty("speed", QString::number(std::nearbyint(cur_speed)));
