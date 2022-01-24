@@ -185,7 +185,7 @@ void OnroadHud::updateState(const UIState &s) {
   float cur_speed = std::max(0.0, sm["carState"].getCarState().getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH));
 
 
-  auto leads = (*s->sm)["modelV2"].getModelV2().getLeadsV3();
+  auto leads = sm["modelV2"].getModelV2().getLeadsV3();
   float leadSpeed = 0;
   if (leads.length() > 0) {
     leadSpeed = leads[0].getVStd();
