@@ -220,7 +220,7 @@ void CameraViewWidget::paintGL() {
   glUniform1i(program->uniformLocation("uTexture"), 0);
   glUniformMatrix4fv(program->uniformLocation("uTransform"), 1, GL_TRUE, frame_mat.v);
 
-  // assert(glGetError() == GL_NO_ERROR);
+  assert(glGetError() == GL_NO_ERROR);
   glEnableVertexAttribArray(0);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, (const void *)0);
   glDisableVertexAttribArray(0);
@@ -240,7 +240,7 @@ void CameraViewWidget::vipcConnected(VisionIpcClient *vipc_client) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_BLUE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
-    // assert(glGetError() == GL_NO_ERROR);
+    assert(glGetError() == GL_NO_ERROR);
   }
   latest_texture_id = -1;
   stream_width = vipc_client->buffers[0].width;
@@ -312,7 +312,7 @@ void CameraViewWidget::vipcThread() {
           glBindTexture(GL_TEXTURE_2D, texture[buf->idx]->frame_tex);
           glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, buf->width, buf->height, GL_RGB, GL_UNSIGNED_BYTE, 0);
           glBindTexture(GL_TEXTURE_2D, 0);
-          // assert(glGetError() == GL_NO_ERROR);
+          assert(glGetError() == GL_NO_ERROR);
 
           wait_fence.reset(new WaitFence());
 

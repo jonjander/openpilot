@@ -242,7 +242,7 @@ void OnroadHud::paintEvent(QPaintEvent *event) {
 
   //lead speed 
   configFont(p, "Open Sans", 176, "Bold");
-  drawText(p, rect().center().x(), 350, leadSpeed);
+  drawText(p, rect().center().x(), 380, leadSpeed);
   
   // engage-ability icon
   if (engageable) {
