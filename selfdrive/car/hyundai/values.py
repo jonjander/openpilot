@@ -4,7 +4,7 @@ Ecu = car.CarParams.Ecu
 
 # Steer torque limits
 class CarControllerParams:
-  ACCEL_MIN = -4.5 # m/s
+  ACCEL_MIN = -3.5 # m/s
   ACCEL_MAX = 2.0 # m/s
 
   def __init__(self, CP):
