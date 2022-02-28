@@ -188,10 +188,19 @@ void OnroadHud::updateState(const UIState &s) {
   QString maxspeed_str = cruise_set ? QString::number(std::nearbyint(maxspeed)) : "N/A";
   float cur_speed = std::max(0.0, sm["carState"].getCarState().getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH));
 
+
+  auto leads = sm["modelV2"].getModelV2().getLeadsV3();
+  QString leadspeed_str = "";
+  if (leads[0].getProb() > .5) {
+    float leadspeed = leads[0].getV()[0] * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH);
+    leadspeed_str = QString::number(std::nearbyint(leadspeed));
+  }
+
   setProperty("is_cruise_set", cruise_set);
   setProperty("speed", QString::number(std::nearbyint(cur_speed)));
   setProperty("maxSpeed", maxspeed_str);
   setProperty("speedUnit", s.scene.is_metric ? "km/h" : "mph");
+  setProperty("leadSpeed", leadspeed_str);
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
 
@@ -232,9 +241,13 @@ void OnroadHud::paintEvent(QPaintEvent *event) {
   // current speed
   configFont(p, "Open Sans", 176, "Bold");
   drawText(p, rect().center().x(), 210, speed);
-  configFont(p, "Open Sans", 66, "Regular");
-  drawText(p, rect().center().x(), 290, speedUnit, 200);
+  // configFont(p, "Open Sans", 66, "Regular");
+  // drawText(p, rect().center().x(), 290, speedUnit, 200);
 
+  //lead speed 
+  configFont(p, "Open Sans", 176, "Bold");
+  drawText(p, rect().center().x(), 380, leadSpeed);
+  
   // engage-ability icon
   if (engageable) {
     drawIcon(p, rect().right() - radius / 2 - bdr_s * 2, radius / 2 + int(bdr_s * 1.5),
