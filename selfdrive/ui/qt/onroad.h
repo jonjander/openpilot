@@ -14,6 +14,7 @@ class OnroadHud : public QWidget {
   Q_PROPERTY(QString speed MEMBER speed NOTIFY valueChanged);
   Q_PROPERTY(QString speedUnit MEMBER speedUnit NOTIFY valueChanged);
   Q_PROPERTY(QString maxSpeed MEMBER maxSpeed NOTIFY valueChanged);
+  Q_PROPERTY(QString leadSpeed MEMBER leadSpeed NOTIFY valueChanged);
   Q_PROPERTY(bool is_cruise_set MEMBER is_cruise_set NOTIFY valueChanged);
   Q_PROPERTY(bool engageable MEMBER engageable NOTIFY valueChanged);
   Q_PROPERTY(bool dmActive MEMBER dmActive NOTIFY valueChanged);
@@ -36,6 +37,7 @@ private:
   QString speed;
   QString speedUnit;
   QString maxSpeed;
+  QString leadSpeed;
   bool is_cruise_set = false;
   bool engageable = false;
   bool dmActive = false;
