@@ -48,5 +48,17 @@
   "Offroad_NoFirmware": {
     "text": "openpilot was unable to identify your car. Check integrity of cables and ensure all connections are secure, particularly that the comma power is fully inserted in the OBD-II port of the vehicle. Need help? Join discord.comma.ai.",
     "severity": 0
+  },
+  "Offroad_x_DisableRadar": {
+    "text": "Trying to disable radar",
+    "severity": 0
+  },
+  "Offroad_x_DisableRadar_Try": {
+    "text": "Still rying to disable radar",
+    "severity": 0
+  },
+  "Offroad_x_DisableRadar_failed": {
+    "text": "Failed to disable radar",
+    "severity": 0
   }
 }
