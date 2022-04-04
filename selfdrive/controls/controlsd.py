@@ -2,6 +2,7 @@
 import os
 import math
 from numbers import Number
+import sys
 
 from cereal import car, log
 from common.numpy_fast import clip
@@ -174,6 +175,7 @@ class Controls:
       set_offroad_alert("Offroad_x_DisableRadar", True, extra_text=f"Found fwdRadar: {rdr_fw.fwVersion}")
       for i in range(40):
         try:
+          set_offroad_alert("Offroad_x_DisableRadar_Try", True, extra_text=f"Retry {i+1}")
           query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [b'\x10\x07'], [b'\x50\x07'], debug=True)
           for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
             print("ecu write data by id ...")
@@ -183,7 +185,6 @@ class Controls:
             WRITE_DAT_RESPONSE = b'\x68'
             query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [WRITE_DAT_REQUEST+dataId+new_config], [WRITE_DAT_RESPONSE], debug=True)
             query.get_data(0)
-            set_offroad_alert("Offroad_x_DisableRadar_Try", True, extra_text=f"Retry {i+1}")
             break
           break
         except Exception as e:
