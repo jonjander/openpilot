@@ -165,17 +165,14 @@ class Controls:
     self.button_timers = {ButtonEvent.Type.decelCruise: 0, ButtonEvent.Type.accelCruise: 0}
 
         
-    set_offroad_alert("Offroad_x_DisableRadar", True, extra_text="Try to enable radar tracks")
     if self.CP.carFingerprint in [HYUNDAI_CAR.KIA_NIRO_EV]:
       rdr_fw = None
       for fw in self.CP.carFw:
         if fw.ecu == "fwdRadar":
           rdr_fw = fw
           break
-      set_offroad_alert("Offroad_x_DisableRadar", True, extra_text=f"Found fwdRadar: {rdr_fw.fwVersion}")
       for i in range(40):
         try:
-          set_offroad_alert("Offroad_x_DisableRadar_Try", True, extra_text=f"Retry {i+1}")
           query = IsoTpParallelQuery(self.pm.sock['sendcan'], self.can_sock, 0, [rdr_fw.address], [b'\x10\x07'], [b'\x50\x07'], debug=True)
           for addr, dat in query.get_data(0.1).items(): # pylint: disable=unused-variable
             print("ecu write data by id ...")
@@ -188,7 +185,8 @@ class Controls:
             break
           break
         except Exception as e:
-          set_offroad_alert("Offroad_x_DisableRadar_failed", True, extra_text=f"Failed {i}: {e}")
+          print(f"Failed {i}: {e}") 
+
 
 
     # TODO: no longer necessary, aside from process replay
