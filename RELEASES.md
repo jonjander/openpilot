@@ -16,6 +16,7 @@ Version 0.8.12 (2021-12-15)
  * Fixed HUD alerts on newer Honda Bosch thanks to csouers!
  * Audi Q3 2020-21 support thanks to jyoung8607!
  * Lexus RC 2020 support thanks to ErichMoraga!
+ * RSS feed
 
 Version 0.8.11 (2021-11-29)
 ========================
